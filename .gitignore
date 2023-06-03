@@ -1,0 +1,5 @@
+/.vs
+/HotelManagementAPI/bin
+/HotelManagementAPI/obj/Release/net6.0
+/HotelManagementAPI/obj/Debug/net6.0
+/HotelManagementAPI/obj
