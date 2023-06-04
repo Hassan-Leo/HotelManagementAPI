@@ -15,10 +15,6 @@ namespace HotelManagementAPI.Models
 
 		[Required]
 		[StringLength(50)]
-		public string MiddleName { get; set; }
-
-		[Required]
-		[StringLength(50)]
 		public string LastName { get; set; }
 
 		[Required]
