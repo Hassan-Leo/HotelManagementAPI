@@ -2,8 +2,9 @@
 
 namespace HotelManagementAPI.DTOs
 {
-	public class UserRegisterDTO
+	public class UserUpdateDTO
 	{
+		public string Id { get; set; }
 
 		[Required(ErrorMessage = "FirstName is Required")]
 		[MaxLength(100, ErrorMessage = "First Name exceed the defined Length")]
@@ -18,13 +19,6 @@ namespace HotelManagementAPI.DTOs
 		[EmailAddress]
 		public string? Email { get; set; }
 
-		[Required(ErrorMessage = "Password is Required")]
-		[MaxLength(20, ErrorMessage = "Password Exceeds the defined Length")]
-		public string Password { get; set; }
-
-		[Compare("Password", ErrorMessage = "The Password and confirm password do not match")]
-		public string ConfirmPassword { get; set; }
-
 		[Required(ErrorMessage = "FirstName is Required")]
 		[MaxLength(15, ErrorMessage = "Phone Number exceed the defined Length")]
 		public string? PhoneNumber { get; set; }
@@ -36,8 +30,5 @@ namespace HotelManagementAPI.DTOs
 		public string? State { get; set; }
 
 		public string? PostalCode { get; set; }
-
-		[Required]
-		public int RoleId { get; set; }
 	}
 }

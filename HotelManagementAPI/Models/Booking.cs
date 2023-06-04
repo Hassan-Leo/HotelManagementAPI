@@ -9,8 +9,12 @@ namespace HotelManagementAPI.Models
 		public string Id { get; set; }
 
 		[Required]
-		[ForeignKey("Customer")]
+		[ForeignKey("User")]
 		public string UserId { get; set; }
+
+		[Required]
+		[ForeignKey("Room")]
+		public string RoomId { get; set; }
 
 		[Required]
 		public DateTime CheckIn { get; set; }
@@ -22,6 +26,7 @@ namespace HotelManagementAPI.Models
 
 		public bool IsCheckedOut { get; set; } = false;
 
+		[Required]
 		public int RequestStatusId { get; set; }
 
 		public DateTime? RequestOn { get; set; }
@@ -36,6 +41,6 @@ namespace HotelManagementAPI.Models
 
 		public virtual User User { get; set; }
 		public virtual RequestStatus RequestStatus { get; set; }
-		public virtual ICollection<Room> Rooms { get; set; }
+		public virtual Room Room { get; set; }
 	}
 }

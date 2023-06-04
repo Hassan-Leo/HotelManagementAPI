@@ -7,4 +7,11 @@
 		Accepted,
 		Rejected,
 	}
+
+	public enum enUserRoles
+	{
+		None,
+		Customer,
+		Admin
+	}
 }
