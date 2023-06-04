@@ -5,24 +5,22 @@ namespace HotelManagementAPI.DTOs
 {
 	public class BookingDTO
 	{
-		public int Id { get; set; }
+		[Required]
+		public string CustomerId { get; set; }
 
-		public int CustomerId { get; set; }
+		[Required]
+		public string CheckIn { get; set; }
 
-		public DateTime CheckIn { get; set; }
-
-		public DateTime CheckOut { get; set; }
+		[Required]
+		public string CheckOut { get; set; }
 
 		public bool IsCancelled { get; set; }
 
 		public bool IsCheckedOut { get; set; }
-
+		[Required]
 		public int RequestStatusId { get; set; }
-
-		public DateTime RequestOn { get; set; }
-
-		public DateTime ApprovalOn { get; set; }
-
-		public DateTime RejectedOn { get; set; }
+		public string RequestOn { get; set; }
+		public string ApprovalOn { get; set; }
+		public string RejectedOn { get; set; }
 	}
 }

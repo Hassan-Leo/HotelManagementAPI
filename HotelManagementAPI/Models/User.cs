@@ -1,21 +1,55 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace HotelManagementAPI.Models
 {
-	public class User : IdentityUser
+	public class User 
 	{
-		public string? FirstName { get; set; }
+		[Key]
+		public string Id { get; set; }
 
-		public string? LastName { get; set; }
+		[Required]
+		[StringLength(50)]
+		public string FirstName { get; set; }
 
-		public string? Street { get; set; }
+		[Required]
+		[StringLength(50)]
+		public string LastName { get; set; }
 
-		public string? City { get; set; }
+		[Required]
+		[EmailAddress]
+		public string Email { get; set; }
 
-		public string? State { get; set; }
+		[Required]
+		public string? Password { get; set; }
 
-		public string? PostalCode { get; set; }
+		[Required]
+		public int RoleId { get; set; }
+
+		[Required]
+		public string PhoneNumber { get; set; }
+
+		[Required]
+		[StringLength(100)]
+		public string Street { get; set; }
+
+		[Required]
+		[StringLength(50)]
+		public string City { get; set; }
+
+		[Required]
+		[StringLength(50)]
+		public string State { get; set; }
+
+		[Required]
+		[StringLength(10)]
+		public string PostalCode { get; set; }
+
+		public DateTime CreatedOn { get; set; }
+
+		public DateTime UpdatedOn { get; set; }
+
+		public virtual ICollection<Booking> Bookings { get; set; }
+
 
 	}
 }

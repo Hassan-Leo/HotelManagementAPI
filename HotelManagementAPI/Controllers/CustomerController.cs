@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using HotelBookingManagement.DataAccess;
-using HotelBookingManagement.Models;
 using HotelManagementAPI.DTOs;
 using HotelManagementAPI.Models;
 using HotelManagementAPI.Repository;
@@ -9,17 +7,27 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace HotelBookingManagement.Controllers
+namespace HotelManagementAPI.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
 	public class CustomersController : ControllerBase
 	{
 		private readonly ICustomerRepository _customerRepo;
+		private readonly IUserRepository _userRepo;
+		private readonly IMapper _mapper;
 
-		public CustomersController(ICustomerRepository customerRepo)
+		public CustomersController(ICustomerRepository customerRepo, IUserRepository userRepo, IMapper mapper)
 		{
 			_customerRepo = customerRepo;
+			_userRepo = userRepo;
+			_mapper = mapper;
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> GetAllRoles()
+		{
+			return Ok(_userRepo.GetRoles());
 		}
 
 		[HttpGet]
@@ -56,13 +64,28 @@ namespace HotelBookingManagement.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> CreateCustomer([FromBody] CustomerDTO dto)
+		public async Task<IActionResult> CreateCustomer([FromBody] CustomerRegisterDTO dto)
 		{
 			try
 			{
-				Customer customer = Mapper.Map<Customer>(dto);
-				await _customerRepo.AddAsync(customer);
-				return Ok();
+				if (ModelState.IsValid)
+				{
+					Customer customer = _mapper.Map<Customer>(dto);
+					ResponseDTO result = await _customerRepo.AddAsync(customer);
+					if (result.IsSucessful)
+					{
+						return StatusCode(201);
+					}
+					else
+					{
+						return BadRequest(new { message = "Failed to create a User"});
+					}
+				}
+				else
+				{
+					return BadRequest()
+				}
+				
 			}
 			catch (Exception ex)
 			{
@@ -72,14 +95,14 @@ namespace HotelBookingManagement.Controllers
 		}
 
 		[HttpPut("{id}")]
-		public async Task<IActionResult> UpdateCustomer(string id, CustomerDTO customer)
+		public async Task<IActionResult> UpdateCustomer(string id, CustomerRegisterDTO dto)
 		{
 			try
 			{
-				if (id != customer.CustomerId)
+				if (id != dto.Id)
 					return BadRequest();
-
-				await _customerDataAccess.UpdateCustomerAsync(customer);
+				Customer customer = _mapper.Map<Customer>(dto);
+				await _customerRepo.UpdateAsync(customer);
 				return Ok();
 			}
 			catch (Exception ex)
@@ -90,11 +113,11 @@ namespace HotelBookingManagement.Controllers
 		}
 
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteCustomer(int id)
+		public async Task<IActionResult> DeleteCustomer(string id)
 		{
 			try
 			{
-				await _customerDataAccess.DeleteCustomerAsync(id);
+				await _customerRepo.DeleteAsync(await _customerRepo.GetByIdAsync(id));
 				return Ok();
 			}
 			catch (Exception ex)

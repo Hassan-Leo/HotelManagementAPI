@@ -9,8 +9,7 @@ namespace HotelManagementAPI.DTOs
 		{
 			CreateMap<BookingDTO, Booking>();
 			CreateMap<Booking, BookingDTO>();
-			CreateMap<CustomerDTO, Customer>();
-			CreateMap<Customer, CustomerDTO>();
+			CreateMap<UserRegisterDTO, User>().ReverseMap();
 			CreateMap<User, UserDTO>();
 			CreateMap<UserDTO, User>();
 		}
