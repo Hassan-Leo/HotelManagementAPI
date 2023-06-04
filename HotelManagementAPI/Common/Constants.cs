@@ -1,7 +1,7 @@
 ﻿namespace HotelManagementAPI.Common
 {
-	public class Constants
+	public static class Constants
 	{
-
+		public const int DEFAULT_PAKISTAN_OFFSET_DATETIME = 5;
 	}
 }

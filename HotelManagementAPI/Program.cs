@@ -55,6 +55,29 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(x =>
 {
 	x.SwaggerDoc("v2", new OpenApiInfo { Title = "Hotel Management APIs", Version = "v2" });
+	x.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+	{
+		In = ParameterLocation.Header,
+		Description = "Please enter token",
+		Name = "Authorization",
+		Type = SecuritySchemeType.Http,
+		BearerFormat = "JWT",
+		Scheme = "bearer"
+	});
+	x.AddSecurityRequirement(new OpenApiSecurityRequirement
+	{
+		{
+			new OpenApiSecurityScheme
+			{
+				Reference = new OpenApiReference
+				{
+					Type=ReferenceType.SecurityScheme,
+					Id="Bearer"
+				}
+			},
+			new string[]{}
+		}
+	});
 });
 
 var app = builder.Build();

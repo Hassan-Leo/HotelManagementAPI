@@ -193,6 +193,7 @@ namespace HotelManagementAPI.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RoomId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CheckIn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CheckOut = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsCancelled = table.Column<bool>(type: "bit", nullable: false),
@@ -219,30 +220,36 @@ namespace HotelManagementAPI.Migrations
                         principalTable: "RequestStatuses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "BookingRoom",
-                columns: table => new
-                {
-                    BookingsId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    RoomsId = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BookingRoom", x => new { x.BookingsId, x.RoomsId });
                     table.ForeignKey(
-                        name: "FK_BookingRoom_Bookings_BookingsId",
-                        column: x => x.BookingsId,
-                        principalTable: "Bookings",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_BookingRoom_Rooms_RoomsId",
-                        column: x => x.RoomsId,
+                        name: "FK_Bookings_Rooms_RoomId",
+                        column: x => x.RoomId,
                         principalTable: "Rooms",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "aecbeea7-cb23-4dda-b887-e792053418d9", "1fc963bd-62d9-4743-9544-b2166602df17", "Admin", "ADMIN" },
+                    { "eb41ff4f-5630-4e7b-b81a-a617587d9b63", "46ce4825-e7cb-4232-afd7-670368b515c8", "Customer", "CUSTOMER" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Rooms",
+                columns: new[] { "Id", "Capacity", "Price", "RoomNumber" },
+                values: new object[,]
+                {
+                    { "4b1b7798-798c-4648-b76d-b0b25e60a5c7", 3, 400m, "301" },
+                    { "5573a213-f4e0-4626-a646-a64ff9dd0d0e", 2, 150m, "102" },
+                    { "62eb6827-b6fe-4aa7-80b9-4b0c141cc593", 3, 550m, "303" },
+                    { "708571f7-60e1-4b93-928a-77384dae0838", 3, 400m, "302" },
+                    { "c0d852fb-71cc-4244-a973-7a8c5584cadb", 2, 250m, "202" },
+                    { "c134b661-241c-4636-a4f3-f69d12c44541", 2, 150m, "101" },
+                    { "e45c4493-9f19-4ae2-8aeb-8879b40ef25f", 2, 200m, "201" },
+                    { "fb3b17b8-6eda-4e1b-b0d6-34c4679e5587", 2, 200m, "203" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -285,14 +292,14 @@ namespace HotelManagementAPI.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BookingRoom_RoomsId",
-                table: "BookingRoom",
-                column: "RoomsId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Bookings_RequestStatusId",
                 table: "Bookings",
                 column: "RequestStatusId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bookings_RoomId",
+                table: "Bookings",
+                column: "RoomId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Bookings_UserId",
@@ -318,22 +325,19 @@ namespace HotelManagementAPI.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "BookingRoom");
-
-            migrationBuilder.DropTable(
-                name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
                 name: "Bookings");
 
             migrationBuilder.DropTable(
-                name: "Rooms");
+                name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "RequestStatuses");
+
+            migrationBuilder.DropTable(
+                name: "Rooms");
         }
     }
 }

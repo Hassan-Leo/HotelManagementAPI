@@ -22,21 +22,6 @@ namespace HotelManagementAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("BookingRoom", b =>
-                {
-                    b.Property<string>("BookingsId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("RoomsId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("BookingsId", "RoomsId");
-
-                    b.HasIndex("RoomsId");
-
-                    b.ToTable("BookingRoom");
-                });
-
             modelBuilder.Entity("HotelManagementAPI.Models.Booking", b =>
                 {
                     b.Property<string>("Id")
@@ -69,6 +54,10 @@ namespace HotelManagementAPI.Migrations
                     b.Property<int>("RequestStatusId")
                         .HasColumnType("int");
 
+                    b.Property<string>("RoomId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
 
@@ -79,6 +68,8 @@ namespace HotelManagementAPI.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("RequestStatusId");
+
+                    b.HasIndex("RoomId");
 
                     b.HasIndex("UserId");
 
@@ -121,6 +112,64 @@ namespace HotelManagementAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Rooms");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "c134b661-241c-4636-a4f3-f69d12c44541",
+                            Capacity = 2,
+                            Price = 150m,
+                            RoomNumber = "101"
+                        },
+                        new
+                        {
+                            Id = "5573a213-f4e0-4626-a646-a64ff9dd0d0e",
+                            Capacity = 2,
+                            Price = 150m,
+                            RoomNumber = "102"
+                        },
+                        new
+                        {
+                            Id = "e45c4493-9f19-4ae2-8aeb-8879b40ef25f",
+                            Capacity = 2,
+                            Price = 200m,
+                            RoomNumber = "201"
+                        },
+                        new
+                        {
+                            Id = "c0d852fb-71cc-4244-a973-7a8c5584cadb",
+                            Capacity = 2,
+                            Price = 250m,
+                            RoomNumber = "202"
+                        },
+                        new
+                        {
+                            Id = "fb3b17b8-6eda-4e1b-b0d6-34c4679e5587",
+                            Capacity = 2,
+                            Price = 200m,
+                            RoomNumber = "203"
+                        },
+                        new
+                        {
+                            Id = "4b1b7798-798c-4648-b76d-b0b25e60a5c7",
+                            Capacity = 3,
+                            Price = 400m,
+                            RoomNumber = "301"
+                        },
+                        new
+                        {
+                            Id = "708571f7-60e1-4b93-928a-77384dae0838",
+                            Capacity = 3,
+                            Price = 400m,
+                            RoomNumber = "302"
+                        },
+                        new
+                        {
+                            Id = "62eb6827-b6fe-4aa7-80b9-4b0c141cc593",
+                            Capacity = 3,
+                            Price = 550m,
+                            RoomNumber = "303"
+                        });
                 });
 
             modelBuilder.Entity("HotelManagementAPI.Models.User", b =>
@@ -231,6 +280,22 @@ namespace HotelManagementAPI.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "eb41ff4f-5630-4e7b-b81a-a617587d9b63",
+                            ConcurrencyStamp = "46ce4825-e7cb-4232-afd7-670368b515c8",
+                            Name = "Customer",
+                            NormalizedName = "CUSTOMER"
+                        },
+                        new
+                        {
+                            Id = "aecbeea7-cb23-4dda-b887-e792053418d9",
+                            ConcurrencyStamp = "1fc963bd-62d9-4743-9544-b2166602df17",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -339,26 +404,17 @@ namespace HotelManagementAPI.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("BookingRoom", b =>
-                {
-                    b.HasOne("HotelManagementAPI.Models.Booking", null)
-                        .WithMany()
-                        .HasForeignKey("BookingsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HotelManagementAPI.Models.Room", null)
-                        .WithMany()
-                        .HasForeignKey("RoomsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("HotelManagementAPI.Models.Booking", b =>
                 {
                     b.HasOne("HotelManagementAPI.Models.RequestStatus", "RequestStatus")
                         .WithMany()
                         .HasForeignKey("RequestStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HotelManagementAPI.Models.Room", "Room")
+                        .WithMany("Bookings")
+                        .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -369,6 +425,8 @@ namespace HotelManagementAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("RequestStatus");
+
+                    b.Navigation("Room");
 
                     b.Navigation("User");
                 });
@@ -422,6 +480,11 @@ namespace HotelManagementAPI.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("HotelManagementAPI.Models.Room", b =>
+                {
+                    b.Navigation("Bookings");
                 });
 
             modelBuilder.Entity("HotelManagementAPI.Models.User", b =>

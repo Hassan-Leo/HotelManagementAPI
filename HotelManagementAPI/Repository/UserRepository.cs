@@ -23,6 +23,17 @@ namespace HotelManagementAPI.Repository
 			return _context.Roles.ToList();
 		}
 
+		public async Task<string> GetUserRoleAsync(User user)
+		{
+			var roles = await _userManager.GetRolesAsync(user);
+			return roles.First();
+		}
+
+		public async Task<bool> CheckPasswordAsync(User user,string password)
+		{
+			return await _userManager.CheckPasswordAsync(user, password);
+		}
+
 		public async Task<IEnumerable<Booking>> GetAllBookingRequest(string userId)
 		{
 			return await _context.Bookings.Where(x => x.UserId == userId).ToListAsync();
@@ -33,6 +44,7 @@ namespace HotelManagementAPI.Repository
 			ResponseDTO response = new ResponseDTO();
 			if (user != null)
 			{
+				user.EmailConfirmed = true;
 				var result = await _userManager.CreateAsync(user, password);
 				if (result.Succeeded)
 				{
@@ -85,6 +97,11 @@ namespace HotelManagementAPI.Repository
 				response.IsSucessful = false;
 				return response;
 			}
+		}
+
+		public Task<User> GetUserByEmailAsync(string email)
+		{
+			return _userManager.FindByEmailAsync(email);
 		}
 	}
 }

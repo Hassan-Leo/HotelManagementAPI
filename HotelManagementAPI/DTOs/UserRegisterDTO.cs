@@ -18,6 +18,10 @@ namespace HotelManagementAPI.DTOs
 		[EmailAddress]
 		public string? Email { get; set; }
 
+		[Required(ErrorMessage = "UserName is Required")]
+		[MaxLength(50, ErrorMessage = "UserName exceed the defined Length")]
+		public string? UserName { get; set; }
+
 		[Required(ErrorMessage = "Password is Required")]
 		[MaxLength(20, ErrorMessage = "Password Exceeds the defined Length")]
 		public string Password { get; set; }
@@ -29,13 +33,7 @@ namespace HotelManagementAPI.DTOs
 		[MaxLength(15, ErrorMessage = "Phone Number exceed the defined Length")]
 		public string? PhoneNumber { get; set; }
 
-		public string? Street { get; set; }
-
-		public string? City { get; set; }
-
-		public string? State { get; set; }
-
-		public string? PostalCode { get; set; }
+		public string? Address { get; set; }
 
 		[Required]
 		public int RoleId { get; set; }

@@ -3,6 +3,7 @@ using HotelManagementAPI.DTOs;
 using HotelManagementAPI.Models;
 using HotelManagementAPI.Repository;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -26,10 +27,15 @@ namespace HotelManagementAPI.Controllers
 		[HttpGet("GetRoles")]
 		public async Task<IActionResult> GetAllRoles()
 		{
-			return Ok(_userRepo.GetRoles());
+			List<IdentityRole> roles = _userRepo.GetRoles();List<string> list = new List<string>();
+			foreach (IdentityRole item in roles)
+			{
+				list.Add(item.Name);
+			}
+			return Ok(list);
 		}
 
-		[HttpGet, Authorize]
+		[HttpGet("GetAllUsers"), Authorize]
 		public async Task<ActionResult<List<UserReadDTO>>> GetUsers()
 		{
 			try
@@ -56,12 +62,16 @@ namespace HotelManagementAPI.Controllers
 			}
 		}
 
-		[HttpGet("{id}"), Authorize]
-		public async Task<ActionResult<UserReadDTO>> GetUser(string id)
+		[HttpGet("{email}"), Authorize]
+		public async Task<ActionResult<UserReadDTO>> GetUser(string email)
 		{
 			try
 			{
-				var user = _mapper.Map<UserReadDTO>(await _userRepo.GetByIdAsync(id));
+				if (string.IsNullOrEmpty(email))
+				{
+					return BadRequest();
+				}
+				var user = _mapper.Map<UserReadDTO>(await _userRepo.GetUserByEmailAsync(email));
 				if (user == null)
 					return NotFound();
 
