@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace HotelManagementAPI.Controllers
 {
 	[ApiController]
-	[Authorize]
 	[Route("api/[controller]")]
 	public class RoomsController : Controller
 	{
@@ -21,6 +20,11 @@ namespace HotelManagementAPI.Controllers
 			_roomRepo = roomRepo;
 		}
 
+		[HttpGet]
+		public async Task<ActionResult<List<Room>>> GetAllRooms()
+		{
+			return Ok(await _roomRepo.GetAllAsync());
+		}
 
 		// POST: RoomController/Create
 		[HttpPost]

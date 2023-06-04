@@ -21,6 +21,6 @@ namespace HotelManagementAPI.DTOs
 		public bool IsCheckedOut { get; set; } = false;
 		[Required]
 		public int RequestStatusId { get; set; } = (int)enRequestStatus.Pending;
-		public string RequestOn { get; set; }
+		public string? RequestOn { get; set; }
 	}
 }

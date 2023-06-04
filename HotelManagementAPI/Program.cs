@@ -3,8 +3,6 @@ using HotelManagementAPI.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -17,29 +15,15 @@ builder.Services.AddDbContext<HotelBookingManagementContext>(options =>
 	options.UseSqlServer(connectionString, opt => opt.EnableRetryOnFailure());
 });
 builder.Services.AddControllers();
-builder.Services.AddIdentity<User, IdentityRole>()
-	.AddEntityFrameworkStores<HotelBookingManagementContext>();
+builder.Services.AddIdentity<User, IdentityRole>(x => 
+{
+	x.Lockout.AllowedForNewUsers = false;
+}).AddEntityFrameworkStores<HotelBookingManagementContext>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 
-builder.Services.AddAuthentication(opt =>
-{
-	opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-	opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
-{
-	options.TokenValidationParameters = new TokenValidationParameters
-	{
-		ValidateIssuer = true,
-		ValidateAudience = true,
-		ValidateLifetime = true,
-		ValidateIssuerSigningKey = true,
-		ValidIssuer = "https://localhost:5001",
-		ValidAudience = "https://localhost:5001",
-		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("secretKey345#$"))
-	};
-});
+
 builder.Services.AddCors(options =>
 {
 	options.AddPolicy("EnableCORS", builder =>
@@ -55,29 +39,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(x =>
 {
 	x.SwaggerDoc("v2", new OpenApiInfo { Title = "Hotel Management APIs", Version = "v2" });
-	x.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-	{
-		In = ParameterLocation.Header,
-		Description = "Please enter token",
-		Name = "Authorization",
-		Type = SecuritySchemeType.Http,
-		BearerFormat = "JWT",
-		Scheme = "bearer"
-	});
-	x.AddSecurityRequirement(new OpenApiSecurityRequirement
-	{
-		{
-			new OpenApiSecurityScheme
-			{
-				Reference = new OpenApiReference
-				{
-					Type=ReferenceType.SecurityScheme,
-					Id="Bearer"
-				}
-			},
-			new string[]{}
-		}
-	});
 });
 
 var app = builder.Build();

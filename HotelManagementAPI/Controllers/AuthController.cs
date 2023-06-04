@@ -1,4 +1,5 @@
-﻿using HotelManagementAPI.DTOs;
+﻿using AutoMapper;
+using HotelManagementAPI.DTOs;
 using HotelManagementAPI.Models;
 using HotelManagementAPI.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -16,11 +17,13 @@ namespace HotelManagementAPI.Controllers
 	{
 		private readonly HotelBookingManagementContext _context;
 		private readonly IUserRepository _userRepo;
+		private readonly IMapper _mapper;
 
-        public AuthController(HotelBookingManagementContext context, IUserRepository userRepo)
+        public AuthController(HotelBookingManagementContext context, IUserRepository userRepo, IMapper mapper)
         {
 			_context = context;
 			_userRepo = userRepo;
+			_mapper = mapper;
         }
 
         [HttpPost("login")]
@@ -37,24 +40,9 @@ namespace HotelManagementAPI.Controllers
 				{
 					if (await _userRepo.CheckPasswordAsync(user, model.Password))
 					{
-						var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"));
-						var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
-						string role = await _userRepo.GetUserRoleAsync(user);
-						var claims = new List<Claim>
-						{
-							new Claim(ClaimTypes.Name, user.Email),
-							new Claim(ClaimTypes.Role, role)
-						};
-
-						var tokeOptions = new JwtSecurityToken(
-							issuer: "https://localhost:5001",
-							audience: "https://localhost:5001",
-							claims: claims,
-							expires: DateTime.Now.AddMinutes(60),
-							signingCredentials: signinCredentials
-						);
-						var tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
-						return Ok(new AuthenticatedResponse { Token = tokenString });
+						UserReadDTO readDTO = _mapper.Map<UserReadDTO>(user);
+						readDTO.Role = await _userRepo.GetUserRoleAsync(user);
+						return Ok(readDTO);
 					}
 					else
 					{

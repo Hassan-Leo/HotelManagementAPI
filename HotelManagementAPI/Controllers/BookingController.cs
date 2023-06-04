@@ -12,7 +12,6 @@ using static HotelManagementAPI.Common.HelperFunctions;
 namespace HotelManagementAPI.Controllers
 {
 	[Route("api/[controller]")]
-	[Authorize]
 	[ApiController]
 	public class BookingController : ControllerBase
 	{
@@ -55,9 +54,9 @@ namespace HotelManagementAPI.Controllers
 
 		// GET api/<ValuesController>/5
 		[HttpGet("{id}")]
-		public string Get(int id)
+		public async Task<ActionResult> GetById(string id)
 		{
-			return "value";
+			return Ok();
 		}
 
 		// POST api/<ValuesController>

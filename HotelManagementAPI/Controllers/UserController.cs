@@ -35,7 +35,7 @@ namespace HotelManagementAPI.Controllers
 			return Ok(list);
 		}
 
-		[HttpGet("GetAllUsers"), Authorize]
+		[HttpGet("GetAllUsers")]
 		public async Task<ActionResult<List<UserReadDTO>>> GetUsers()
 		{
 			try
@@ -62,7 +62,7 @@ namespace HotelManagementAPI.Controllers
 			}
 		}
 
-		[HttpGet("{email}"), Authorize]
+		[HttpGet("{email}")]
 		public async Task<ActionResult<UserReadDTO>> GetUser(string email)
 		{
 			try
@@ -121,7 +121,7 @@ namespace HotelManagementAPI.Controllers
 			}
 		}
 
-		[HttpPut("{id}"), Authorize]
+		[HttpPut("{id}")]
 		public async Task<IActionResult> UpdateUser(string id, UserUpdateDTO dto)
 		{
 			try
@@ -155,7 +155,7 @@ namespace HotelManagementAPI.Controllers
 			}
 		}
 
-		[HttpDelete("{id}"), Authorize]
+		[HttpDelete("{id}")]
 		public async Task<IActionResult> DeleteUser(string id)
 		{
 			try
@@ -170,7 +170,7 @@ namespace HotelManagementAPI.Controllers
 			}
 		}
 
-		[HttpGet("GetAllBookingRequest"), Authorize]
+		[HttpGet("GetAllBookingRequest")]
 		public async Task<ActionResult> GetAllBookingRequest(string id)
 		{
 			try

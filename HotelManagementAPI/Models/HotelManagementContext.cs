@@ -50,7 +50,7 @@ public class RequestStatusConfiguration : IEntityTypeConfiguration<RequestStatus
 		},
 		new RequestStatus
 		{
-			Id = 2,
+			Id = 3,
 			Name = "Rejected"
 		});
 	}
